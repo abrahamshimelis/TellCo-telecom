@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import sys
 sys.path.append('../')
-from scripts.data_quality_checks import check_missing_data, check_duplicates, check_data_types, check_numeric_anomalies
+from src.data_quality_checks import check_missing_data, check_duplicates, check_data_types, check_numeric_anomalies
 
 class TestDataChecks(unittest.TestCase):
 
