@@ -56,7 +56,6 @@ def check_duplicates(df):
         return duplicates_summary
 
 
-
 def check_data_types(df):
     """
     Check data types of columns in a DataFrame and return a summary.
@@ -85,3 +84,34 @@ def check_data_types(df):
         # Rename the 'Data Type' column to 'List of Data Types'
         non_uniform_columns.rename(columns={'Data Type': 'List of Data Types'}, inplace=True)
         return non_uniform_columns
+
+
+def check_numeric_anomalies(df, column, lower_bound=None, upper_bound=None):
+    """
+    Check for numeric anomalies in a specific column of a DataFrame and return a summary.
+    
+    Parameters:
+    - df: Pandas DataFrame
+    - column: The specific column to check
+    - lower_bound: Lower bound for numeric anomalies (optional)
+    - upper_bound: Upper bound for numeric anomalies (optional)
+    
+    Returns:
+    - str or DataFrame: Success message or summary of anomalies
+    """
+    if df[column].dtype not in ['int64', 'float64']:
+        return f"Error: Column {column} is not numeric."
+    
+    if lower_bound is not None and upper_bound is not None:
+        anomalies = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
+    else:
+        anomalies = df[~df[column].apply(lambda x: isinstance(x, (int, float)))]
+    
+    if anomalies.empty:
+        return "Success: No anomalies detected."
+    else:
+        anomalies_summary = pd.DataFrame({
+            'Column Name': [column],
+            'Number of Anomalies': [len(anomalies)]
+        })
+        return anomalies_summary
