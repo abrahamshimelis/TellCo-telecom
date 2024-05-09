@@ -36,14 +36,8 @@ def get_total_missing_percentage(df):
     Returns:
     - missing_data_percentage: Total percentage of missing values
     """
-    # Calculate missing values in each column
-    missing_data_summary = df.isnull().sum()
-    
-    # Calculate total missing values across all columns
-    total_missing_values = missing_data_summary.sum()
-    
-    # Calculate total percentage of missing values
-    total_percentage = (total_missing_values / (df.shape[0] * df.shape[1])) * 100
+    # Calculate total missing values across all columns and total percentage of missing values
+    total_percentage = (df.isnull().sum().sum() / df.size) * 100
     
     return total_percentage
 
