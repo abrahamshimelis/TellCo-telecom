@@ -26,6 +26,21 @@ def check_missing_data(df):
         
         return missing_data_summary
 
+def get_total_missing_percentage(df):
+    """
+    Calculate the total percentage of missing values from all columns in a DataFrame.
+    
+    Parameters:
+    - df: Pandas DataFrame
+    
+    Returns:
+    - missing_data_percentage: Total percentage of missing values
+    """
+    # Calculate total missing values across all columns and total percentage of missing values
+    total_percentage = (df.isnull().sum().sum() / df.size) * 100
+    
+    return total_percentage
+
 
 def check_duplicates(df):
     """
@@ -84,6 +99,19 @@ def check_data_types(df):
         # Rename the 'Data Type' column to 'List of Data Types'
         non_uniform_columns.rename(columns={'Data Type': 'List of Data Types'}, inplace=True)
         return non_uniform_columns
+
+def get_numeric_columns(df):
+    """
+    Get a list of column names with numeric data types from a DataFrame.
+    
+    Parameters:
+    - df: Pandas DataFrame
+    
+    Returns:
+    - numeric_columns: List of column names with numeric data types
+    """
+    numeric_columns = df.select_dtypes(include=['number']).columns.tolist()
+    return numeric_columns
 
 
 def check_numeric_anomalies(df, column, lower_bound=None, upper_bound=None):

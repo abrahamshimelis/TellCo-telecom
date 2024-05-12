@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import sys
 sys.path.append('../')
-from scripts.data_quality_checks import check_missing_data, check_duplicates, check_data_types, check_numeric_anomalies
+from src.data_quality_checks import check_missing_data, check_duplicates, check_data_types, check_numeric_anomalies, get_numeric_columns, get_total_missing_percentage
 
 class TestDataChecks(unittest.TestCase):
 
@@ -16,6 +16,20 @@ class TestDataChecks(unittest.TestCase):
         result = check_missing_data(df)
         self.assertEqual(result['Column Name'].tolist(), ['A', 'B'])
         self.assertEqual(result['Missing Values'].tolist(), [1, 2])
+
+    def test_get_total_missing_percentage(self):
+        # Create a sample DataFrame with missing values
+        data = {'A': [1, None, 3], 'B': [4.5, 5.6, None], 'C': ['x', 'y', 'z']}
+        df = pd.DataFrame(data)
+
+        # Calculate total percentage of missing values
+        missing_data_percentage = get_total_missing_percentage(df)
+
+        # Expected total percentage of missing values
+        expected_percentage = 2 / (3 * 3) * 100  # Number of missing values / Total cells * 100
+
+        # Check if the calculated percentage matches the expected percentage
+        self.assertAlmostEqual(missing_data_percentage, expected_percentage, places=2)
 
     def test_check_duplicates(self):
         df = pd.DataFrame({
@@ -40,6 +54,16 @@ class TestDataChecks(unittest.TestCase):
             self.assertEqual(result['Column Name'].tolist(), ['A', 'B'])
             self.assertEqual(result['Number of Different Data Types'].tolist(), [2, 2])
 
+
+    def test_get_numeric_columns(self):
+        # Create a sample DataFrame with different data types
+        data = {'A': [1, 2, 3], 'B': [4.5, 5.6, 6.7], 'C': ['x', 'y', 'z']}
+        df = pd.DataFrame(data)
+
+        # Test if the function correctly identifies numeric columns
+        numeric_columns = get_numeric_columns(df)
+        expected_columns = ['A', 'B']  # Columns A and B have numeric data types
+        self.assertEqual(numeric_columns, expected_columns)
 
     def test_check_numeric_anomalies(self):
         df = pd.DataFrame({
